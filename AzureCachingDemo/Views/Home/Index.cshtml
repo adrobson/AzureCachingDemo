@@ -1,0 +1,84 @@
+﻿@model ViewDataModel
+
+@{
+    ViewData["Title"] = "Redis Cache Demo";
+}
+
+<div class="row">
+    <h1>@ViewData["Title"]</h1>
+    <form asp-controller="Home" asp-action="ProcessModels" method="post">
+        <h2>Run the models</h2>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <button type="submit">Process Data</button>
+            </div>
+        </div>
+        <h3>
+            Model Data Inputs
+        </h3>
+        <div>
+            <label style="width:250px;">Number of models:</label>
+            <input asp-for=@Model.ModelInput.NumModels />
+        </div>
+        <div>
+            <label style="width:250px;">Number of variables in each model:</label>
+            <input asp-for=@Model.ModelInput.NumVariables />
+        </div>
+    </form>
+    <br />
+    <h2>Processing times (milliseconds)</h2>
+    @{
+        if (Model.TimeToCreateData != null)
+        {
+            <h4>Creating data in the database: @Model.TimeToCreateData.TotalMilliseconds;</h4>
+        }
+        else
+        {
+            <h4>Creating data in the database: 0</h4>
+        }
+    }
+
+
+    @{
+        if (Model.TimeToCreateModels != null)
+        {
+            <h4>Creating the models: @Model.TimeToCreateModels.TotalMilliseconds</h4>
+        }
+        else
+        {
+            <h4>Creating the models: 0</h4>
+
+        }
+    }
+    @{
+        if (Model.TimeToGetModels != null)
+        {
+            <h4>Loading the models from Redis Cache: @Model.TimeToGetModels.TotalMilliseconds</h4>
+        }
+        else
+        {
+            <h4>Loading the models from Redis Cache: 0</h4>
+        }
+    }
+    <br />
+
+    <h2>Calculation results</h2>
+    @{
+        <div class="row">
+            <div class="col-md-4">ModelId</div>
+            <div class="col-md-4">Model Name</div>
+            <div class="col-md-4">Total Amount</div>
+        </div>
+        <br />
+        foreach (ModelSummary ms in Model.ModelSummaryResults)
+        {
+            <div class="row">
+                <div class="col-md-4">@ms.ModelId</div>
+                <div class="col-md-4">@ms.ModelName</div>
+                <div class="col-md-4">@ms.ModelValue</div>
+            </div>
+
+        }
+    }
+</div>
